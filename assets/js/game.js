@@ -1,27 +1,38 @@
 var playerName = "asdf"; //window.prompt("What is your robot's name?");
-var playerHealth = 100;
-var playerAttack = 10;
-var playerMoney = 10;
-
+var playerHealth;
+var playerAttack;
+var playerMoney;
 var enemyNames = ["Roborto", "Android", "Trumble"];
-var enemyHealth = 50;
-var enemyAttack = 12;
-
-var round = 0;
+var enemyHealth;
+var enemyAttack;
+var round;
 
 window.alert("Welcome to Robot Gladiators!");
 
-for (var i = 0; i < enemyNames.length && playerHealth > 0; i++) {
-    window.alert("A wild " + enemyNames[i] + " has appeared.");
-
-    while (playerHealth > 0 && enemyHealth > 0) {
-        round++;
-        window.alert("Round " + round);
-        battle(enemyNames[i]);
-    }
-
+do {
+    playerHealth = 10;
+    playerAttack = 10;
+    playerMoney = 10;
     enemyHealth = 50;
-}        
+    enemyAttack = 12;
+    round = 0;
+
+    for (var i = 0; i < enemyNames.length && playerHealth > 0; i++) {
+        window.alert("A wild " + enemyNames[i] + " has appeared.");
+    
+        while (playerHealth > 0 && enemyHealth > 0) {
+            round++;
+            window.alert("Round " + round);
+            battle(enemyNames[i]);
+        }
+        enemyHealth = 50;
+    }
+    endGame();
+
+    var playAgain = window.confirm("Would you like to play again?");
+} while (playAgain === true);
+
+window.alert("Thank you for playing Robot Gladiators!");
 
 function battle(enemyName) {
     var promptFight = window.prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
@@ -64,13 +75,27 @@ function battle(enemyName) {
     else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
         var confirmSkip = window.confirm("Are you sure you'd like to skip?");
 
-        if (confirmSkip) {
+        if (confirmSkip && playerMoney >= 10) {
             window.alert(playerName + " has decided to skip this fight.");
             playerMoney -= 10;
             enemyHealth = 0;
         }
+        else {
+            window.alert([playerName + " has insufficient money to skip."]);
+            round--;
+        }
     }
     else {
         window.alert("Invalid input. Please enter 'Fight' or 'Skip'.");
+        round--;
+    }
+}
+
+function endGame() {
+    if (playerHealth > 0) {
+        window.alert("Final Score: " + playerMoney)
+    }
+    else {
+        window.alert("You've lost your robot in battle.");
     }
 }
