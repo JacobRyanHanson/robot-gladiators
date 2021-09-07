@@ -2,92 +2,113 @@ var playerName = "asdf"; //window.prompt("What is your robot's name?");
 var playerHealth;
 var playerAttack;
 var playerMoney;
+
 var enemyNames = ["Roborto", "Android", "Trumble"];
 var enemyHealth;
 var enemyAttack;
-var round;
 
 window.alert("Welcome to Robot Gladiators!");
 
 do {
-    playerHealth = 10;
-    playerAttack = 10;
-    playerMoney = 10;
-    enemyHealth = 50;
-    enemyAttack = 12;
-    round = 0;
-
+    startGame();
     for (var i = 0; i < enemyNames.length && playerHealth > 0; i++) {
-        window.alert("A wild " + enemyNames[i] + " has appeared.");
-    
-        while (playerHealth > 0 && enemyHealth > 0) {
-            round++;
-            window.alert("Round " + round);
-            battle(enemyNames[i]);
-        }
         enemyHealth = 50;
+        window.alert("Round " + (i + 1));
+        window.alert("A wild " + enemyNames[i] + " has appeared.");
+        battle(enemyNames[i]);
+        if (i < enemyNames.length - 1 && playerHealth > 0) {
+            var shopConfirm = window.confirm("The shop is open. Would you like to visit?");
+            if (shopConfirm) {
+                shop();
+            }   
+        }    
     }
     endGame();
-
     var playAgain = window.confirm("Would you like to play again?");
 } while (playAgain === true);
 
-window.alert("Thank you for playing Robot Gladiators!");
+function startGame() {
+    playerHealth = 100;
+    playerAttack = 10;
+    playerMoney = 100;
+    enemyHealth = 50;
+    enemyAttack = 12;
+}
 
 function battle(enemyName) {
-    var promptFight = window.prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
+    while (playerHealth > 0 && enemyHealth > 0) {
+        var promptFight = window.prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
 
-    if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-        enemyHealth -= playerAttack;
+        if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
+            enemyHealth -= playerAttack;
 
-        console.log("--------------------------------")
-        console.log(playerName + " attacked " + enemyName);
-        console.log(playerName + " delt " + playerAttack + " damage.");
+            console.log("--------------------------------");
+            console.log(playerName + " attacked " + enemyName);
+            console.log(playerName + " delt " + playerAttack + " damage.");
+            window.alert(playerName + " attacked.");
 
-        window.alert(playerName + " attacked.")
+            if (enemyHealth > 0) {
+                console.log(enemyName + " has " + enemyHealth + " health remaining.");
+                window.alert(enemyName + " has " + enemyHealth + " health left.");
 
-        if (enemyHealth > 0) {
-            console.log(enemyName + " has " + enemyHealth + " health remaining.");
+                playerHealth -= enemyAttack;
 
-            window.alert(enemyName + " has " + enemyHealth + " health left.");
+                console.log("--------------------------------");
+                console.log(enemyName + " attacked " + playerName);
+                console.log(enemyName + " delt " + enemyAttack + " damage.");
+                window.alert(enemyName + " attacked.");
 
-            playerHealth -= enemyAttack;
-
-            console.log("--------------------------------")
-            console.log(enemyName + " attacked " + playerName);
-            console.log(enemyName + " delt " + enemyAttack + " damage.");
-
-            window.alert(enemyName + " attacked.");
-
-            if (playerHealth > 0) {
-                console.log(playerName + " has " + playerHealth + " health remaining.");              
-                
-                window.alert(playerName + " has " + playerHealth + " health left.");
-            }  
+                if (playerHealth > 0) {
+                    console.log(playerName + " has " + playerHealth + " health remaining.");              
+                    window.alert(playerName + " has " + playerHealth + " health left.");
+                }
+                else {
+                    window.alert(playerName + " has died.");
+                }
+            }
             else {
-                window.alert(playerName + " has died in battle! Game Over!");
-            }  
+                window.alert(enemyName + " has died.");
+            }
         }
-        else {
-            window.alert(enemyName + " has died.");
-        }     
-    }
-    else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-        var confirmSkip = window.confirm("Are you sure you'd like to skip?");
+        else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
+            var confirmSkip = window.confirm("Are you sure you'd like to skip?");
 
-        if (confirmSkip && playerMoney >= 10) {
-            window.alert(playerName + " has decided to skip this fight.");
-            playerMoney -= 10;
-            enemyHealth = 0;
+            if (confirmSkip && playerMoney >= 10) {
+                window.alert(playerName + " has decided to skip this fight.");
+                playerMoney -= 10;
+                break;
+            }
+            else {
+                window.alert(playerName + " has insufficient currency to skip.");
+            }
         }
         else {
-            window.alert([playerName + " has insufficient money to skip."]);
-            round--;
+            window.alert("Invalid input. Please enter 'Fight' or 'Skip'.");
         }
+    }  
+}
+
+function shop() {
+    var shopChoice = window.prompt("Would you like to [Refill] your health, [Upgrade] your attack or [Leave] the store?");
+    if ("refill".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerMoney >= 7) {
+        window.alert("Refilling " + playerName + "'s health by 20 for 7 currency.")
+        playerHealth += 20;
+        playerMoney -= 7;
+    }
+    else if ("upgrade".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerMoney >= 7) {
+        window.alert("Upgrading " + playerName + "'s attack by 6 points for 7 currency.")
+        playerAttack += 6;
+        playerMoney -= 7;
+    }
+    else if ("leave".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0) {
+        window.alert(playerName + " left the store.");
+    }
+    else if (playerMoney < 7) {
+        window.alert(playerName + " has insufficient currency to purchase.");
     }
     else {
-        window.alert("Invalid input. Please enter 'Fight' or 'Skip'.");
-        round--;
+        window.alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.")
+        shop();
     }
 }
 
@@ -96,6 +117,6 @@ function endGame() {
         window.alert("Final Score: " + playerMoney)
     }
     else {
-        window.alert("You've lost your robot in battle.");
+        window.alert("Game Over");
     }
 }
