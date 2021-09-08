@@ -12,7 +12,7 @@ window.alert("Welcome to Robot Gladiators!");
 do {
     startGame();
     for (var i = 0; i < enemyNames.length && playerHealth > 0; i++) {
-        enemyHealth = 50;
+        enemyHealth = randNum(40, 60);
         window.alert("Round " + (i + 1));
         window.alert("A wild " + enemyNames[i] + " has appeared.");
         battle(enemyNames[i]);
@@ -31,7 +31,6 @@ function startGame() {
     playerHealth = 100;
     playerAttack = 10;
     playerMoney = 100;
-    enemyHealth = 50;
     enemyAttack = 12;
 }
 
@@ -40,26 +39,28 @@ function battle(enemyName) {
         var promptFight = window.prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
 
         if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-            enemyHealth -= playerAttack;
+            var damage = randNum(playerAttack - 3, playerAttack);
+            enemyHealth = Math.max(0, enemyHealth - damage);
 
             console.log("--------------------------------");
             console.log(playerName + " attacked " + enemyName);
-            console.log(playerName + " delt " + playerAttack + " damage.");
+            console.log(playerName + " delt " + damage + " damage.");
             window.alert(playerName + " attacked.");
 
+            console.log(enemyName + " has " + enemyHealth + " health remaining.");
             if (enemyHealth > 0) {
-                console.log(enemyName + " has " + enemyHealth + " health remaining.");
                 window.alert(enemyName + " has " + enemyHealth + " health left.");
 
-                playerHealth -= enemyAttack;
+                var damage = randNum(enemyAttack - 3, enemyAttack);
+                playerHealth = Math.max(0, playerHealth - damage);
 
                 console.log("--------------------------------");
                 console.log(enemyName + " attacked " + playerName);
-                console.log(enemyName + " delt " + enemyAttack + " damage.");
+                console.log(enemyName + " delt " + damage + " damage.");
                 window.alert(enemyName + " attacked.");
 
-                if (playerHealth > 0) {
-                    console.log(playerName + " has " + playerHealth + " health remaining.");              
+                console.log(playerName + " has " + playerHealth + " health remaining."); 
+                if (playerHealth > 0) {               
                     window.alert(playerName + " has " + playerHealth + " health left.");
                 }
                 else {
@@ -75,7 +76,7 @@ function battle(enemyName) {
 
             if (confirmSkip && playerMoney >= 10) {
                 window.alert(playerName + " has decided to skip this fight.");
-                playerMoney -= 10;
+                playerMoney = Math.max(0, playerMoney - 10);
                 break;
             }
             else {
@@ -110,6 +111,11 @@ function shop() {
         window.alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.")
         shop();
     }
+}
+
+function randNum(min, max) {
+    var num = Math.floor(Math.random() * (max - min + 1) + min);
+    return num;
 }
 
 function endGame() {
