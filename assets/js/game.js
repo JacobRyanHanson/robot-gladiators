@@ -1,38 +1,43 @@
 //objects
 var playerInfo = {
-    name: "asdf", //window.prompt("What is your robot's name?"),
+    name: window.prompt("What is your robot's name?"),
     health: 100,
     attack: 10,
-    money: 30,
+    money: 10,
     reset: function() {
         this.health = 100;
         this.attack = 10;
-        this.money = 30;
+        this.money = 10;
+    },
+    refillHealth: function() {
+        this.health += 20;
+        this.money -= 7;
+    },
+    upgradeAttack: function() {
+        this.attack += 6;
+        this.money -= 7;
     }
 };
 
 var enemyInfo = [
     {
         name: "Roborto",
-        attack: randNum(10, 14)
+        attack: randNum(10, 14),
     },
-
     {
         name: "Android",
         attack: randNum(10, 14)
     },
-
     {
         name: "Trumble",
         attack: randNum(10, 14)
     }
 ]   
 
-
 window.alert("Welcome to Robot Gladiators!");
 
 do {
-    startGame();
+    playerInfo.reset();
     for (var i = 0; i < enemyInfo.length && playerInfo.health > 0; i++) {
         enemyInfo[i].health = randNum(40, 60);
         window.alert("Round " + (i + 1));
@@ -48,12 +53,6 @@ do {
     endGame();
     var playAgain = window.confirm("Would you like to play again?");
 } while (playAgain === true);
-
-function startGame() {
-    playerInfo.health = 100;
-    playerInfo.attack = 10;
-    playerInfo.money = 10;
-};
 
 function battle(enemy) {
     while (playerInfo.health > 0 && enemy.health > 0) {
@@ -114,13 +113,11 @@ function shop() {
     var shopChoice = window.prompt("Would you like to [Refill] your health, [Upgrade] your attack or [Leave] the store?");
     if ("refill".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
         window.alert("Refilling " + playerInfo.name + "'s health by 20 for 7 currency.")
-        playerInfo.health += 20;
-        playerInfo.money -= 7;
+        playerInfo.refillHealth();
     }
     else if ("upgrade".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
         window.alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 currency.")
-        playerInfo.attack += 6;
-        playerInfo.money -= 7;
+        playerInfo.upgradeAttack();
     }
     else if ("leave".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0) {
         window.alert(playerInfo.name + " left the store.");
