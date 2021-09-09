@@ -1,5 +1,4 @@
 //objects
-debugger;
 var playerInfo = {
     name: getName(),
     health: 100,
@@ -65,57 +64,76 @@ function getName() {
 
 function battle(enemy) {
     while (playerInfo.health > 0 && enemy.health > 0) {
-        var promptFight = prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
-
-        if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-            var damage = randNum(playerInfo.attack - 3, playerInfo.attack);
-            enemy.health = Math.max(0, enemy.health - damage);
-
-            console.log("--------------------------------");
-            console.log(playerInfo.name + " attacked " + enemy.name);
-            console.log(playerInfo.name + " delt " + damage + " damage.");
-            alert(playerInfo.name + " attacked.");
-
-            console.log(enemy.name + " has " + enemy.health + " health remaining.");
-            if (enemy.health > 0) {
-                alert(enemy.name + " has " + enemy.health + " health left.");
-
-                var damage = randNum(enemy.attack - 3, enemy.attack);
-                playerInfo.health = Math.max(0, playerInfo.health - damage);
-
-                console.log("--------------------------------");
-                console.log(enemy.name + " attacked " + playerInfo.name);
-                console.log(enemy.name + " delt " + damage + " damage.");
-                alert(enemy.name + " attacked.");
-
-                console.log(playerInfo.name + " has " + playerInfo.health + " health remaining."); 
-                if (playerInfo.health > 0) {               
-                    alert(playerInfo.name + " has " + playerInfo.health + " health left.");
-                }
-                else {
-                    alert(playerInfo.name + " has died.");
-                }
-            }
-            else {
-                alert(enemy.name + " has died.");
-            }
-        }
-        else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-            var confirmSkip = confirm("Are you sure you'd like to skip?");
-
-            if (confirmSkip && playerInfo.money >= 10) {
-                alert(playerInfo.name + " has decided to skip this fight.");
-                playerInfo.money = Math.max(0, playerInfo.money - 10);
-                break;
-            }
-            else {
-                alert(playerInfo.name + " has insufficient money to skip.");
-            }
+        var number = randNum(0, 1);
+        if (number === 0) {
+            playerTurn(enemy);
         }
         else {
-            alert("Invalid input. Please enter 'Fight' or 'Skip'.");
+            enemyTurn(enemy);
         }
     }  
+}
+
+function playerTurn(enemy) {
+    var promptFight = prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
+
+    if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
+        var damage = randNum(playerInfo.attack - 3, playerInfo.attack);
+        enemy.health = Math.max(0, enemy.health - damage);
+
+        alert(playerInfo.name + " attacked.");
+
+        console.log("--------------------------------");
+        console.log(playerInfo.name + " attacked " + enemy.name);
+        console.log(playerInfo.name + " delt " + damage + " damage.");
+        console.log(enemy.name + " has " + enemy.health + " health remaining.");
+
+        if (enemy.health > 0) {               
+            alert(enemy.name + " has " + enemy.health + " health left.");
+        }
+        else {
+            alert(enemy.name + " has died.");
+        }
+    }
+    else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
+        var confirmSkip = confirm("Are you sure you'd like to skip?");
+
+        if (confirmSkip && playerInfo.money >= 10) {
+            alert(playerInfo.name + " has decided to skip this fight.");
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            enemy.health = 0;
+        }
+        else {
+            alert(playerInfo.name + " has insufficient money to skip.");
+        }
+    }
+    else {
+        alert("Invalid input. Please enter 'Fight' or 'Skip'.");
+    }
+}
+
+function enemyTurn(enemy) {
+    if (enemy.health > 0) {
+        var damage = randNum(enemy.attack - 3, enemy.attack);
+        playerInfo.health = Math.max(0, playerInfo.health - damage);
+
+        alert(enemy.name + " attacked.");
+
+        console.log("--------------------------------");
+        console.log(enemy.name + " attacked " + playerInfo.name);
+        console.log(enemy.name + " delt " + damage + " damage.");
+        console.log(playerInfo.name + " has " + playerInfo.health + " health remaining."); 
+        
+        if (playerInfo.health > 0) {               
+            alert(playerInfo.name + " has " + playerInfo.health + " health left.");
+        }
+        else {
+            alert(playerInfo.name + " has died.");
+        }
+    }
+    else {
+        alert(enemy.name + " has died.");
+    }
 }
 
 function shop() {
