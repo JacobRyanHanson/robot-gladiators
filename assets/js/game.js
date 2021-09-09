@@ -1,22 +1,44 @@
-var playerName = "asdf"; //window.prompt("What is your robot's name?");
-var playerHealth;
-var playerAttack;
-var playerMoney;
+//objects
+var playerInfo = {
+    name: "asdf", //window.prompt("What is your robot's name?"),
+    health: 100,
+    attack: 10,
+    money: 30,
+    reset: function() {
+        this.health = 100;
+        this.attack = 10;
+        this.money = 30;
+    }
+};
 
-var enemyNames = ["Roborto", "Android", "Trumble"];
-var enemyHealth;
-var enemyAttack;
+var enemyInfo = [
+    {
+        name: "Roborto",
+        attack: randNum(10, 14)
+    },
+
+    {
+        name: "Android",
+        attack: randNum(10, 14)
+    },
+
+    {
+        name: "Trumble",
+        attack: randNum(10, 14)
+    }
+]   
+
 
 window.alert("Welcome to Robot Gladiators!");
 
 do {
     startGame();
-    for (var i = 0; i < enemyNames.length && playerHealth > 0; i++) {
-        enemyHealth = randNum(40, 60);
+    for (var i = 0; i < enemyInfo.length && playerInfo.health > 0; i++) {
+        enemyInfo[i].health = randNum(40, 60);
         window.alert("Round " + (i + 1));
-        window.alert("A wild " + enemyNames[i] + " has appeared.");
-        battle(enemyNames[i]);
-        if (i < enemyNames.length - 1 && playerHealth > 0) {
+        window.alert("A wild " + enemyInfo[i].name + " has appeared.");
+        battle(enemyInfo[i]);
+        if (i < enemyInfo.length - 1 && playerInfo.health > 0) {
             var shopConfirm = window.confirm("The shop is open. Would you like to visit?");
             if (shopConfirm) {
                 shop();
@@ -28,101 +50,100 @@ do {
 } while (playAgain === true);
 
 function startGame() {
-    playerHealth = 100;
-    playerAttack = 10;
-    playerMoney = 100;
-    enemyAttack = 12;
-}
+    playerInfo.health = 100;
+    playerInfo.attack = 10;
+    playerInfo.money = 10;
+};
 
-function battle(enemyName) {
-    while (playerHealth > 0 && enemyHealth > 0) {
+function battle(enemy) {
+    while (playerInfo.health > 0 && enemy.health > 0) {
         var promptFight = window.prompt("Would you like to [Fight] or [Skip] this battle? Enter 'Fight' or 'Skip' to choose.");
 
         if ("fight".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
-            var damage = randNum(playerAttack - 3, playerAttack);
-            enemyHealth = Math.max(0, enemyHealth - damage);
+            var damage = randNum(playerInfo.attack - 3, playerInfo.attack);
+            enemy.health = Math.max(0, enemy.health - damage);
 
             console.log("--------------------------------");
-            console.log(playerName + " attacked " + enemyName);
-            console.log(playerName + " delt " + damage + " damage.");
-            window.alert(playerName + " attacked.");
+            console.log(playerInfo.name + " attacked " + enemy.name);
+            console.log(playerInfo.name + " delt " + damage + " damage.");
+            window.alert(playerInfo.name + " attacked.");
 
-            console.log(enemyName + " has " + enemyHealth + " health remaining.");
-            if (enemyHealth > 0) {
-                window.alert(enemyName + " has " + enemyHealth + " health left.");
+            console.log(enemy.name + " has " + enemy.health + " health remaining.");
+            if (enemy.health > 0) {
+                window.alert(enemy.name + " has " + enemy.health + " health left.");
 
-                var damage = randNum(enemyAttack - 3, enemyAttack);
-                playerHealth = Math.max(0, playerHealth - damage);
+                var damage = randNum(enemy.attack - 3, enemy.attack);
+                playerInfo.health = Math.max(0, playerInfo.health - damage);
 
                 console.log("--------------------------------");
-                console.log(enemyName + " attacked " + playerName);
-                console.log(enemyName + " delt " + damage + " damage.");
-                window.alert(enemyName + " attacked.");
+                console.log(enemy.name + " attacked " + playerInfo.name);
+                console.log(enemy.name + " delt " + damage + " damage.");
+                window.alert(enemy.name + " attacked.");
 
-                console.log(playerName + " has " + playerHealth + " health remaining."); 
-                if (playerHealth > 0) {               
-                    window.alert(playerName + " has " + playerHealth + " health left.");
+                console.log(playerInfo.name + " has " + playerInfo.health + " health remaining."); 
+                if (playerInfo.health > 0) {               
+                    window.alert(playerInfo.name + " has " + playerInfo.health + " health left.");
                 }
                 else {
-                    window.alert(playerName + " has died.");
+                    window.alert(playerInfo.name + " has died.");
                 }
             }
             else {
-                window.alert(enemyName + " has died.");
+                window.alert(enemy.name + " has died.");
             }
         }
         else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
             var confirmSkip = window.confirm("Are you sure you'd like to skip?");
 
-            if (confirmSkip && playerMoney >= 10) {
-                window.alert(playerName + " has decided to skip this fight.");
-                playerMoney = Math.max(0, playerMoney - 10);
+            if (confirmSkip && playerInfo.money >= 10) {
+                window.alert(playerInfo.name + " has decided to skip this fight.");
+                playerInfo.money = Math.max(0, playerInfo.money - 10);
                 break;
             }
             else {
-                window.alert(playerName + " has insufficient currency to skip.");
+                window.alert(playerInfo.name + " has insufficient currency to skip.");
             }
         }
         else {
             window.alert("Invalid input. Please enter 'Fight' or 'Skip'.");
         }
     }  
-}
+};
 
 function shop() {
     var shopChoice = window.prompt("Would you like to [Refill] your health, [Upgrade] your attack or [Leave] the store?");
-    if ("refill".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerMoney >= 7) {
-        window.alert("Refilling " + playerName + "'s health by 20 for 7 currency.")
-        playerHealth += 20;
-        playerMoney -= 7;
+    if ("refill".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
+        window.alert("Refilling " + playerInfo.name + "'s health by 20 for 7 currency.")
+        playerInfo.health += 20;
+        playerInfo.money -= 7;
     }
-    else if ("upgrade".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerMoney >= 7) {
-        window.alert("Upgrading " + playerName + "'s attack by 6 points for 7 currency.")
-        playerAttack += 6;
-        playerMoney -= 7;
+    else if ("upgrade".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
+        window.alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 currency.")
+        playerInfo.attack += 6;
+        playerInfo.money -= 7;
     }
     else if ("leave".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0) {
-        window.alert(playerName + " left the store.");
+        window.alert(playerInfo.name + " left the store.");
     }
-    else if (playerMoney < 7) {
-        window.alert(playerName + " has insufficient currency to purchase.");
+    else if (playerInfo.money < 7) {
+        window.alert(playerInfo.name + " has insufficient currency to purchase.");
     }
     else {
         window.alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.")
         shop();
     }
-}
+};
 
 function randNum(min, max) {
     var num = Math.floor(Math.random() * (max - min + 1) + min);
     return num;
-}
+};
 
 function endGame() {
-    if (playerHealth > 0) {
-        window.alert("Final Score: " + playerMoney)
+    if (playerInfo.health > 0) {
+        window.alert("Final Score: " + playerInfo.money)
     }
     else {
         window.alert("Game Over");
     }
-}
+};
