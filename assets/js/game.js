@@ -1,21 +1,23 @@
+alert("Welcome to Robot Gladiators!");
+
 //objects
 var playerInfo = {
     name: getName(),
     health: 100,
     attack: 10,
-    money: 10,
+    coins: 10,
     reset: function() {
         this.health = 100;
         this.attack = 10;
-        this.money = 10;
+        this.coins = 10;
     },
     refillHealth: function() {
         this.health += 20;
-        this.money -= 7;
+        this.coins -= 7;
     },
     upgradeAttack: function() {
         this.attack += 6;
-        this.money -= 7;
+        this.coins -= 7;
     }
 }
 
@@ -32,9 +34,9 @@ var enemyInfo = [
         name: "Trumble",
         attack: randNum(10, 14)
     }
-]   
+] 
 
-alert("Welcome to Robot Gladiators!");
+var skip;
 
 do {
     playerInfo.reset();
@@ -54,6 +56,24 @@ do {
     var playAgain = confirm("Would you like to play again?");
 } while (playAgain === true);
 
+function battle(enemy) {
+    var number = randNum(0, 1);
+    var otherIndex = otherIndexCheck(number);
+    var turnOrder = [number, otherIndex]
+    skip = false; //skip reset
+
+    while (playerInfo.health > 0 && enemy.health > 0 && !skip) {
+        for (var i = 0; i < turnOrder.length  && !skip; i++) {
+            if (turnOrder[i] === 0) {
+                playerTurn(enemy);
+            }
+            else {
+                enemyTurn(enemy);
+            }
+        }
+    }  
+}
+
 function getName() {
     var name;
     do {
@@ -62,16 +82,13 @@ function getName() {
     return name;
 }
 
-function battle(enemy) {
-    while (playerInfo.health > 0 && enemy.health > 0) {
-        var number = randNum(0, 1);
-        if (number === 0) {
-            playerTurn(enemy);
-        }
-        else {
-            enemyTurn(enemy);
-        }
-    }  
+function otherIndexCheck(number) {
+    if (number === 1) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
 }
 
 function playerTurn(enemy) {
@@ -98,17 +115,19 @@ function playerTurn(enemy) {
     else if ("skip".localeCompare(promptFight, 'en', {sensitivity: 'accent'}) === 0) {
         var confirmSkip = confirm("Are you sure you'd like to skip?");
 
-        if (confirmSkip && playerInfo.money >= 10) {
+        if (confirmSkip && playerInfo.coins >= 10) {
             alert(playerInfo.name + " has decided to skip this fight.");
-            playerInfo.money = Math.max(0, playerInfo.money - 10);
-            enemy.health = 0;
+            playerInfo.coins = Math.max(0, playerInfo.coins - 10);
+            skip = true;
         }
         else {
-            alert(playerInfo.name + " has insufficient money to skip.");
+            alert(playerInfo.name + " has insufficient coins to skip.");
+            playerTurn(enemy);
         }
     }
     else {
         alert("Invalid input. Please enter 'Fight' or 'Skip'.");
+        playerTurn(enemy);
     }
 }
 
@@ -138,22 +157,22 @@ function enemyTurn(enemy) {
 
 function shop() {
     var shopChoice = prompt("Would you like to [1] refill your health, [2] upgrade your attack or [3] leave the store?");
-    if (parseInt(shopChoice) === 1 && playerInfo.money >= 7) {
-        alert("Refilling " + playerInfo.name + "'s health by 20 for 7 money.");
+    if (parseInt(shopChoice) === 1 && playerInfo.coins >= 7) {
+        alert("Refilling " + playerInfo.name + "'s health by 20 for 7 coins.");
         playerInfo.refillHealth();
     }
-    else if (parseInt(shopChoice) === 2 && playerInfo.money >= 7) {
-        alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 money.");
+    else if (parseInt(shopChoice) === 2 && playerInfo.coins >= 7) {
+        alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 coins.");
         playerInfo.upgradeAttack();
     }
     else if (parseInt(shopChoice) === 3) {
         alert(playerInfo.name + " left the store.");
     }
-    else if (playerInfo.money < 7) {
-        alert(playerInfo.name + " has insufficient money to purchase.");
+    else if (playerInfo.coins < 7) {
+        alert(playerInfo.name + " has insufficient coins to purchase anything.");
     }
     else {
-        alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.");
+        alert("Invalid input. Please enter '1', '2', or '3'.");
         shop();
     }
 }
@@ -165,7 +184,7 @@ function randNum(min, max) {
 
 function endGame() {
     if (playerInfo.health > 0) {
-        alert("Final Score: " + playerInfo.money);
+        alert("Final Score: " + playerInfo.coins);
     }
     else {
         alert("Game Over");
