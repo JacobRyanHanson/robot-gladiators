@@ -4,11 +4,11 @@ var playerInfo = {
     name: getName(),
     health: 100,
     attack: 10,
-    money: 30,
+    money: 10,
     reset: function() {
         this.health = 100;
         this.attack = 10;
-        this.money = 30;
+        this.money = 10;
     },
     refillHealth: function() {
         this.health += 20;
@@ -18,12 +18,12 @@ var playerInfo = {
         this.attack += 6;
         this.money -= 7;
     }
-};
+}
 
 var enemyInfo = [
     {
         name: "Roborto",
-        attack: randNum(10, 14),
+        attack: randNum(10, 14)
     },
     {
         name: "Android",
@@ -59,7 +59,7 @@ function getName() {
     var name;
     do {
         name = prompt("What is your robot's name?");
-    } while (name === "" || name === null);
+    } while (!name); //falsy value check
     return name;
 }
 
@@ -109,47 +109,47 @@ function battle(enemy) {
                 break;
             }
             else {
-                alert(playerInfo.name + " has insufficient currency to skip.");
+                alert(playerInfo.name + " has insufficient money to skip.");
             }
         }
         else {
             alert("Invalid input. Please enter 'Fight' or 'Skip'.");
         }
     }  
-};
+}
 
 function shop() {
-    var shopChoice = prompt("Would you like to [Refill] your health, [Upgrade] your attack or [Leave] the store?");
-    if ("refill".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
-        alert("Refilling " + playerInfo.name + "'s health by 20 for 7 currency.")
+    var shopChoice = prompt("Would you like to [1] refill your health, [2] upgrade your attack or [3] leave the store?");
+    if (parseInt(shopChoice) === 1 && playerInfo.money >= 7) {
+        alert("Refilling " + playerInfo.name + "'s health by 20 for 7 money.");
         playerInfo.refillHealth();
     }
-    else if ("upgrade".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0 && playerInfo.money >= 7) {
-        alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 currency.")
+    else if (parseInt(shopChoice) === 2 && playerInfo.money >= 7) {
+        alert("Upgrading " + playerInfo.name + "'s attack by 6 points for 7 money.");
         playerInfo.upgradeAttack();
     }
-    else if ("leave".localeCompare(shopChoice, 'en', {sensitivity: 'accent'}) === 0) {
+    else if (parseInt(shopChoice) === 3) {
         alert(playerInfo.name + " left the store.");
     }
     else if (playerInfo.money < 7) {
-        alert(playerInfo.name + " has insufficient currency to purchase.");
+        alert(playerInfo.name + " has insufficient money to purchase.");
     }
     else {
-        alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.")
+        alert("Invalid input. Please enter 'Refill', 'Upgrade', or 'Leave'.");
         shop();
     }
-};
+}
 
 function randNum(min, max) {
     var num = Math.floor(Math.random() * (max - min + 1) + min);
     return num;
-};
+}
 
 function endGame() {
     if (playerInfo.health > 0) {
-        alert("Final Score: " + playerInfo.money)
+        alert("Final Score: " + playerInfo.money);
     }
     else {
         alert("Game Over");
     }
-};
+}
