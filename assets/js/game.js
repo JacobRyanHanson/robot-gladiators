@@ -5,11 +5,11 @@ var playerInfo = {
     name: getName(),
     health: 100,
     attack: 10,
-    coins: 10,
+    coins: 100,
     reset: function() {
         this.health = 100;
         this.attack = 10;
-        this.coins = 10;
+        this.coins = 100;
     },
     refillHealth: function() {
         this.health += 20;
@@ -178,6 +178,18 @@ function randNum(min, max) {
 function endGame() {
     if (playerInfo.health > 0) {
         alert("Final Score: " + playerInfo.coins);
+        var highScore = localStorage.getItem(highScore);
+        if (highScore === null) {
+            highScore = 0;
+        }
+        if (playerInfo.coins > highScore) {
+            localStorage.setItem("highScore", playerInfo.coins);
+            localStorage.setItem("name", playerInfo.name);
+            alert(playerInfo.name + " has a new high score of " + playerInfo.coins + ".");
+        } else {
+            alert(playerInfo.name + "'s highscore remains unchanged.");
+        }
+
     } else {
         alert("Game Over");
     }
